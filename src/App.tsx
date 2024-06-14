@@ -55,7 +55,7 @@ const App = () => {
       return;
     }
 
-    setIndexesToCompare([0, newScoredValues.length - 1]);
+    setIndexesToCompare([0, Math.round(newScoredValues.length / 2)]);
   };
 
   const onCompareValues = (index: number) => {
@@ -78,10 +78,12 @@ const App = () => {
 
     const [first, second] = indexesToCompare;
 
-    if (first + 2 >= second) {
+    setScoredValues(updatedScores);
+
+    if (!updatedScores[second + 1]) {
       updateState();
     } else {
-      setIndexesToCompare([first + 1, second - 1]);
+      setIndexesToCompare([first + 1, second + 1]);
     }
   };
 
