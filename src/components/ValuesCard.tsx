@@ -34,6 +34,8 @@ export const ValuesCard = ({
 
   useEffect(() => {
     setRating(score);
+
+    onNext(Math.ceil(Math.random() * 4));
   }, [name]);
 
   return (

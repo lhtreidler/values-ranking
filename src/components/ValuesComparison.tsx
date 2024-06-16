@@ -16,10 +16,8 @@ export const ValuesComparison = ({
 
   const onClick = (i: number) => {
     setFadeIn(false);
-    const timeout = setTimeout(() => {
-      console.log("submit");
-      onSubmit(i);
-    }, 500);
+
+    onSubmit(i);
   };
 
   useEffect(() => {
@@ -32,33 +30,34 @@ export const ValuesComparison = ({
       <Typography textAlign="center" variant="h3">
         Which feels more true to you?
       </Typography>
-      <Fade in={fadeIn} timeout={1000}>
-        <Stack
-          direction={{ xs: `column${reverseVal}`, sm: `row${reverseVal}` }}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          spacing={3}
-        >
-          {values.map(({ name, description }, i) => (
-            <>
-              <Card
-                variant="outlined"
-                onClick={() => onClick(i)}
-                key={name}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 200,
-                  height: 180,
-                  cursor: "pointer",
-                  ":hover": {
-                    boxShadow: 7,
-                  },
-                }}
-              >
+
+      <Stack
+        direction={{ xs: `column${reverseVal}`, sm: `row${reverseVal}` }}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        spacing={3}
+      >
+        {values.map(({ name, description }, i) => (
+          <>
+            <Card
+              variant="outlined"
+              onClick={() => onClick(i)}
+              key={name}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                width: 200,
+                height: 180,
+                cursor: "pointer",
+                ":hover": {
+                  boxShadow: 7,
+                },
+              }}
+            >
+              <Fade in={fadeIn} timeout={900}>
                 <CardContent>
                   <Typography textAlign="center" variant="body1" mb={2}>
                     {name}
@@ -71,12 +70,12 @@ export const ValuesComparison = ({
                     {description}
                   </Typography>
                 </CardContent>
-              </Card>
-              {i === 0 && <Typography variant="body2"> OR </Typography>}
-            </>
-          ))}
-        </Stack>
-      </Fade>
+              </Fade>
+            </Card>
+            {i === 0 && <Typography variant="body2"> OR </Typography>}
+          </>
+        ))}
+      </Stack>
     </Stack>
   );
 };

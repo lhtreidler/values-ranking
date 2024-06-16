@@ -25,6 +25,8 @@ import {
   Stack,
 } from "@mui/material";
 import { RestartModal } from "./components/RestartModal";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { ValuesPdf } from "./components/ValuesPdf";
 
 const App = () => {
   const [scoredValues, setScoredValues] = useState<ValueScores>(initialValues);
@@ -214,7 +216,7 @@ const App = () => {
                       </Button>
                     )}
                   </div>
-                  {currentIndex !== 0 && (
+                  {currentIndex !== 0 && stageNumber < 3 && (
                     <Button
                       sx={{ height: 30 }}
                       variant="outlined"
@@ -222,6 +224,19 @@ const App = () => {
                       onClick={() => setRestartModalOpen(true)}
                     >
                       Start over
+                    </Button>
+                  )}
+                  {stageNumber === 3 && (
+                    <Button variant="contained" sx={{ height: 35 }}>
+                      <PDFDownloadLink
+                        style={{ textDecoration: "none", color: "white" }}
+                        document={<ValuesPdf values={scoredValues} />}
+                        fileName="top_values.pdf"
+                      >
+                        {({ loading }) =>
+                          loading ? "Loading document..." : "Download as PDF"
+                        }
+                      </PDFDownloadLink>
                     </Button>
                   )}
                 </Box>
@@ -233,7 +248,12 @@ const App = () => {
                     onSubmit={onCompareValues}
                   />
                 )}
-                {stageNumber === 3 && <FinalValuesList values={scoredValues} />}
+                {stageNumber === 3 && (
+                  <FinalValuesList
+                    values={scoredValues}
+                    onRestart={onRestart}
+                  />
+                )}
               </Stack>
               <LinearProgress
                 variant="determinate"
