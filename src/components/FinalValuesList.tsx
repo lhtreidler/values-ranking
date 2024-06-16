@@ -7,6 +7,8 @@ import {
   Typography,
 } from "@mui/material";
 import { ValueScores } from "../constants";
+import { useEffect } from "react";
+import ReactConfetti from "react-confetti";
 
 export const FinalValuesList = ({
   values,
@@ -18,12 +20,22 @@ export const FinalValuesList = ({
   return (
     <Stack spacing={3}>
       <Box
+        position="fixed"
+        top={0}
+        bottom={0}
+        left={0}
+        right={0}
+        overflow="hidden"
+      >
+        <ReactConfetti numberOfPieces={900} recycle={false} />
+      </Box>
+      <Box
         display="flex"
         flexDirection="row"
         flexWrap="wrap"
         justifyContent="center"
       >
-        <Typography variant="h2" width="100%" textAlign="center" mb={3}>
+        <Typography variant="h4" width="100%" textAlign="center" mb={3}>
           Your Top Values
         </Typography>
         {values.map(({ name, description }, i) => (

@@ -46,7 +46,7 @@ export const ValuesCard = ({
       justifyContent="center"
       alignItems="center"
     >
-      <Typography textAlign="center" variant="h4">
+      <Typography textAlign="center" variant="h5">
         First, rate each value based on how important it is to you
       </Typography>
       <Card

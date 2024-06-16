@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { Value, ValueScores } from "../constants";
 
-export const cutLevel = 0.8;
+export const cutLevel = 0.6;
 
 export const cutLosers = (scoredValues: ValueScores) => {
   let currentVals = [...scoredValues];
@@ -34,6 +34,11 @@ export const cutLosers = (scoredValues: ValueScores) => {
     currentVals.slice(0, cutIndex),
     currentVals.slice(0, cutIndex).length
   );
+
+  if (currentVals.slice(0, cutIndex).length % 2 !== 0)
+    throw new Error(`Length is ${currentVals.slice(0, cutIndex).length}`);
+
+  console.log("Length is: ", currentVals.slice(0, cutIndex).length);
 
   return currentVals.slice(0, cutIndex);
 };

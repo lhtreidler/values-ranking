@@ -1,6 +1,15 @@
-import { Box, Card, CardContent, Fade, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Fade,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { Value } from "../constants";
 import { useEffect, useState } from "react";
+import { useTheme } from "@emotion/react";
 
 type ValuesComparisonProps = {
   values: [Value, Value];
@@ -13,21 +22,37 @@ export const ValuesComparison = ({
 }: ValuesComparisonProps) => {
   const [reverseVal, setReverseVal] = useState<"" | "-reverse">("");
   const [fadeIn, setFadeIn] = useState(false);
+  const [selected, setSelected] = useState<null | number>(null);
 
-  const onClick = (i: number) => {
+  const onClick = () => {
+    if (selected === null) return;
     setFadeIn(false);
 
-    onSubmit(i);
+    onSubmit(selected);
+    setSelected(null);
   };
 
   useEffect(() => {
     setReverseVal(Math.random() > 0.5 ? "-reverse" : "");
     setFadeIn(true);
+    onSubmit(Math.random() > 0.5 ? 1 : 0);
   }, [values]);
+
+  const getStyles = (index: number) => {
+    return index === selected
+      ? {
+          backgroundColor: "primary.main",
+          color: "white",
+        }
+      : {
+          backgroundColor: "white",
+          color: "primary.main",
+        };
+  };
 
   return (
     <Stack direction="column" spacing={3}>
-      <Typography textAlign="center" variant="h3">
+      <Typography textAlign="center" variant="h5">
         Which feels more true to you?
       </Typography>
 
@@ -42,7 +67,7 @@ export const ValuesComparison = ({
           <>
             <Card
               variant="outlined"
-              onClick={() => onClick(i)}
+              onClick={() => setSelected(i)}
               key={name}
               sx={{
                 display: "flex",
@@ -55,9 +80,11 @@ export const ValuesComparison = ({
                 ":hover": {
                   boxShadow: 7,
                 },
+                transition: "background-color 0.5s",
+                ...getStyles(i),
               }}
             >
-              <Fade in={fadeIn} timeout={900}>
+              <Fade in={fadeIn} timeout={100}>
                 <CardContent>
                   <Typography textAlign="center" variant="body1" mb={2}>
                     {name}
@@ -72,10 +99,18 @@ export const ValuesComparison = ({
                 </CardContent>
               </Fade>
             </Card>
-            {i === 0 && <Typography variant="body2"> OR </Typography>}
           </>
         ))}
       </Stack>
+      <Box display="flex" flexDirection="row" justifyContent="center">
+        <Button
+          variant="outlined"
+          sx={{ width: "fit-content" }}
+          onClick={onClick}
+        >
+          Next
+        </Button>
+      </Box>
     </Stack>
   );
 };

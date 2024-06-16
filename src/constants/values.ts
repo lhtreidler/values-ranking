@@ -281,7 +281,7 @@ export const values1 = [
   },
 ] as const;
 
-export const values = values1.slice(0, 30).map(({ name, description }) => ({
+export const values = values1.map(({ name, description }) => ({
   name: `${name.slice(0, 1)}${name.slice(1).toLowerCase()}`,
   description,
 }));

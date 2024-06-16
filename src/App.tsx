@@ -43,8 +43,9 @@ const App = () => {
     if (stageNumber === 1)
       setProgress(currentIndex && (currentIndex / scoredValues.length) * 50);
     if (stageNumber === 2) {
-      const step = 50 / 55;
+      const step = 50 / 100;
       setProgress((prev) => Math.min(prev + step, 96));
+      console.log("progress:", progress);
     }
     if (stageNumber === 3) setProgress(100);
   }, [currentIndex, indexesToCompare, stageNumber]);
@@ -158,7 +159,7 @@ const App = () => {
 
   useEffect(() => {
     const storedValues = JSON.parse(
-      localStorage.getItem(localStorageKey) || ""
+      localStorage.getItem(localStorageKey) || "null"
     ) as StoredValues;
 
     if (storedValues) {
@@ -184,7 +185,7 @@ const App = () => {
       flexDirection="column"
       justifyContent="flex-start"
       alignItems="center"
-      mt={4}
+      mt={1}
       minHeight="100vh"
     >
       <Grid item xs={11} sm={10} md={9} lg={4}>
@@ -211,25 +212,29 @@ const App = () => {
                 >
                   <div>
                     {showBackButton && (
-                      <Button variant="outlined" onClick={onBack}>
+                      <Button
+                        sx={{ height: 30 }}
+                        variant="outlined"
+                        onClick={onBack}
+                      >
                         Back
                       </Button>
                     )}
                   </div>
                   {currentIndex !== 0 && stageNumber < 3 && (
                     <Button
-                      sx={{ height: 30 }}
+                      sx={{ height: 30, zIndex: 2 }}
                       variant="outlined"
-                      color="warning"
+                      color="error"
                       onClick={() => setRestartModalOpen(true)}
                     >
                       Start over
                     </Button>
                   )}
                   {stageNumber === 3 && (
-                    <Button variant="contained" sx={{ height: 35 }}>
+                    <Button variant="outlined" sx={{ height: 35, zIndex: 2 }}>
                       <PDFDownloadLink
-                        style={{ textDecoration: "none", color: "white" }}
+                        style={{ textDecoration: "none", color: "#1976d2" }}
                         document={<ValuesPdf values={scoredValues} />}
                         fileName="top_values.pdf"
                       >
