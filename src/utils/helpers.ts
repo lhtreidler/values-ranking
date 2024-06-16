@@ -1,11 +1,15 @@
 import _ from "lodash";
 import { Value, ValueScores } from "../constants";
 
+export const cutLevel = 0.8;
+
 export const cutLosers = (scoredValues: ValueScores) => {
   let currentVals = [...scoredValues];
   currentVals.sort((a, b) => b.score - a.score);
 
-  let cutIndex = Math.max(Math.ceil(currentVals.length * 0.7), 11);
+  let cutIndex = Math.max(Math.ceil(currentVals.length * cutLevel), 10);
+
+  if (cutIndex % 2 === 1) cutIndex += 1;
 
   let found = false;
 
@@ -19,14 +23,19 @@ export const cutLosers = (scoredValues: ValueScores) => {
       if (midScore !== nextScore) {
         found = true;
       } else {
-        cutIndex = cutIndex + 1;
+        // cut evenly
+        cutIndex = cutIndex + 2;
       }
     }
   }
 
-  console.log("next", currentVals.slice(0, cutIndex - 1));
+  console.log(
+    "next",
+    currentVals.slice(0, cutIndex),
+    currentVals.slice(0, cutIndex).length
+  );
 
-  return currentVals.slice(0, cutIndex - 1);
+  return currentVals.slice(0, cutIndex);
 };
 
 const kVal = 1;

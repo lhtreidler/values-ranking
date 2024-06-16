@@ -1,12 +1,6 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, Stack, Typography } from "@mui/material";
 import { Value } from "../constants";
+import { useEffect, useState } from "react";
 
 type ValuesComparisonProps = {
   values: [Value, Value];
@@ -17,13 +11,19 @@ export const ValuesComparison = ({
   values,
   onSubmit,
 }: ValuesComparisonProps) => {
+  const [reverseVal, setReverseVal] = useState<"" | "-reverse">("");
+
+  useEffect(() => {
+    setReverseVal(Math.random() > 0.5 ? "-reverse" : "");
+  }, [values]);
+
   return (
     <Stack direction="column" spacing={3}>
       <Typography textAlign="center" variant="h3">
         Which feels more true to you?
       </Typography>
       <Stack
-        direction={{ xs: "column", sm: "row" }}
+        direction={{ xs: `column${reverseVal}`, sm: `row${reverseVal}` }}
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -33,7 +33,7 @@ export const ValuesComparison = ({
           <>
             <Card
               onClick={() => onSubmit(i)}
-              key={i}
+              key={name}
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -43,7 +43,7 @@ export const ValuesComparison = ({
                 height: 180,
                 cursor: "pointer",
                 ":hover": {
-                  boxShadow: 7, // theme.shadows[20]
+                  boxShadow: 7,
                 },
               }}
             >

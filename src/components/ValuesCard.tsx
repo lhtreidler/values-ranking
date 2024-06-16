@@ -7,14 +7,15 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Value, values } from "../constants";
+import { Value, ValueScore, values } from "../constants";
 import { SyntheticEvent, useEffect, useState } from "react";
 
 export const ValuesCard = ({
   name,
   description,
+  score,
   onNext,
-}: Value & {
+}: ValueScore & {
   onNext: (val: number) => void;
 }) => {
   const [rating, setRating] = useState(0);
@@ -25,40 +26,54 @@ export const ValuesCard = ({
   ) => {
     if (value && value > 0) {
       onNext(value);
-      setRating(0);
     }
   };
 
-  // useEffect(() => {
-  //   onNext(Math.floor(Math.random() * 5));
-  // }, [name]);
+  useEffect(() => {
+    setRating(score);
+  }, [name]);
+
+  useEffect(() => {
+    onNext(Math.floor(Math.random() * 5));
+  }, [name]);
 
   return (
-    <Card
-      sx={{
-        width: 400,
-        maxWidth: "100%",
-        mt: 8,
-        py: 3,
-      }}
+    <Stack
+      direction="column"
+      spacing={3}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
     >
-      <CardContent>
-        <Stack
-          spacing={2}
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Typography variant="h4" mb={2}>
-            {name}
-          </Typography>
-          <Typography textAlign="center" variant="body1">
-            {description}
-          </Typography>
-          <Rating size="large" value={rating} onChange={handleChange} />
-        </Stack>
-      </CardContent>
-    </Card>
+      <Typography textAlign="center" variant="h4">
+        First, rate each value based on how important it is to you
+      </Typography>
+      <Card
+        sx={{
+          width: 400,
+          maxWidth: "100%",
+          mt: 8,
+          py: 3,
+        }}
+      >
+        <CardContent>
+          <Stack
+            spacing={2}
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Typography variant="h4" mb={2}>
+              {name}
+            </Typography>
+            <Typography textAlign="center" variant="body1">
+              {description}
+            </Typography>
+            <Rating size="large" value={rating} onChange={handleChange} />
+          </Stack>
+        </CardContent>
+      </Card>
+    </Stack>
   );
 };
