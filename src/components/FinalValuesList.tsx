@@ -6,9 +6,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+
 import { ValueScores } from "../constants";
-import { useEffect } from "react";
 import ReactConfetti from "react-confetti";
+import { BarChart, BarChartProps, PieChart } from "@mui/x-charts";
 
 export const FinalValuesList = ({
   values,
@@ -17,6 +18,8 @@ export const FinalValuesList = ({
   values: ValueScores;
   onRestart: () => void;
 }) => {
+  console.log(values);
+
   return (
     <Stack spacing={3}>
       <Box
@@ -29,6 +32,7 @@ export const FinalValuesList = ({
       >
         <ReactConfetti numberOfPieces={900} recycle={false} />
       </Box>
+
       <Box
         display="flex"
         flexDirection="row"
@@ -38,6 +42,7 @@ export const FinalValuesList = ({
         <Typography variant="h4" width="100%" textAlign="center" mb={3}>
           Your Top Values
         </Typography>
+
         {values.map(({ name, description }, i) => (
           <Card key={i} sx={{ width: 200, mx: 2, my: 1 }}>
             <CardContent>
@@ -51,6 +56,29 @@ export const FinalValuesList = ({
             </CardContent>
           </Card>
         ))}
+      </Box>
+      <Box px={6}>
+        <BarChart
+          series={[{ data: values.map(({ score }) => score) }]}
+          width={600}
+          height={400}
+          margin={{ left: 100 }}
+          yAxis={[{ data: values.map(({ name }) => name), scaleType: "band" }]}
+          layout="horizontal"
+        />
+        <PieChart
+          series={[
+            {
+              data: values.map(({ name, score }, i) => ({
+                id: i,
+                value: score,
+                label: name,
+              })),
+            },
+          ]}
+          width={700}
+          height={200}
+        />
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center">
         <Typography my={2} variant="body1">
