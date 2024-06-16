@@ -2,12 +2,29 @@ import _ from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { Value, ValueScores, initialValues, values } from "./constants";
+import {
+  StoredValues,
+  Value,
+  ValueScores,
+  initialValues,
+  localStorageKey,
+  values,
+} from "./constants";
 import { ValuesCard } from "./components/ValuesCard";
 import { ValuesComparison } from "./components/ValuesComparison";
 import { cutLevel, cutLosers, getEloScores } from "./utils/helpers";
 import { FinalValuesList } from "./components/FinalValuesList";
-import { Box, Button, Grid, LinearProgress, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  Fade,
+  Grid,
+  LinearProgress,
+  Stack,
+} from "@mui/material";
+import { RestartModal } from "./components/RestartModal";
 
 const App = () => {
   const [scoredValues, setScoredValues] = useState<ValueScores>(initialValues);
@@ -16,7 +33,9 @@ const App = () => {
   const [indexesToCompare, setIndexesToCompare] = useState<
     [number, number] | null
   >(null);
-  const [progress, setProgress] = useState<number>(0);
+  const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [restartModalOpen, setRestartModalOpen] = useState(false);
 
   useEffect(() => {
     if (stageNumber === 1)
@@ -43,9 +62,9 @@ const App = () => {
     [scoredValues, indexesToCompare]
   );
 
-  const updateScore = (index: number, addedScore: number) => {
+  const updateScore = (index: number, score: number) => {
     setScoredValues((prev) => {
-      prev[index].score = prev[index].score + addedScore;
+      prev[index].score = score;
       return prev;
     });
   };
@@ -104,12 +123,57 @@ const App = () => {
     }
   };
 
+  const onRestart = () => {
+    setScoredValues(initialValues);
+    setIndexesToCompare(null);
+    setCurrentIndex(0);
+    setStageNumber(1);
+    setProgress(0);
+    setRestartModalOpen(false);
+  };
+
   const cardProps = {
     ...currentValue,
     onNext,
   };
 
   const showBackButton = stageNumber === 1 && currentIndex > 0;
+
+  useEffect(() => {
+    if (isLoading) return;
+    localStorage.setItem(
+      localStorageKey,
+      JSON.stringify({
+        updatedAt: new Date().toISOString(),
+        scoredValues,
+        stageNumber,
+        indexesToCompare,
+        currentIndex,
+        progress,
+      } as StoredValues)
+    );
+  }, [scoredValues, currentIndex, stageNumber, indexesToCompare, progress]);
+
+  useEffect(() => {
+    const storedValues = JSON.parse(
+      localStorage.getItem(localStorageKey) || ""
+    ) as StoredValues;
+
+    if (storedValues) {
+      setScoredValues(storedValues.scoredValues);
+      setIndexesToCompare(storedValues.indexesToCompare);
+      setCurrentIndex(storedValues.currentIndex);
+      setStageNumber(storedValues.stageNumber);
+      setProgress(storedValues.progress);
+    }
+    setIsLoading(false);
+  }, []);
+
+  const restartModalProps = {
+    handleClose: () => setRestartModalOpen(false),
+    isOpen: restartModalOpen,
+    onSubmit: onRestart,
+  };
 
   return (
     <Grid
@@ -122,31 +186,63 @@ const App = () => {
       minHeight="100vh"
     >
       <Grid item xs={11} sm={10} md={9} lg={4}>
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="space-between"
-          minHeight="95vh"
-          py={3}
-          justifyContent="space-between"
-        >
-          <Stack direction="column">
-            {showBackButton && <Button onClick={onBack}>Back</Button>}
-            {stageNumber === 1 && <ValuesCard {...cardProps} />}
-            {stageNumber === 2 && valuesToCompare && (
-              <ValuesComparison
-                values={valuesToCompare}
-                onSubmit={onCompareValues}
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          <Fade in={!isLoading} timeout={1000}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="space-between"
+              minHeight="95vh"
+              py={3}
+              justifyContent="space-between"
+            >
+              {restartModalOpen && <RestartModal {...restartModalProps} />}
+              <Stack direction="column">
+                <Box
+                  width="100%"
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  height={60}
+                >
+                  <div>
+                    {showBackButton && (
+                      <Button variant="outlined" onClick={onBack}>
+                        Back
+                      </Button>
+                    )}
+                  </div>
+                  {currentIndex !== 0 && (
+                    <Button
+                      sx={{ height: 30 }}
+                      variant="outlined"
+                      color="warning"
+                      onClick={() => setRestartModalOpen(true)}
+                    >
+                      Start over
+                    </Button>
+                  )}
+                </Box>
+
+                {stageNumber === 1 && <ValuesCard {...cardProps} />}
+                {stageNumber === 2 && valuesToCompare && (
+                  <ValuesComparison
+                    values={valuesToCompare}
+                    onSubmit={onCompareValues}
+                  />
+                )}
+                {stageNumber === 3 && <FinalValuesList values={scoredValues} />}
+              </Stack>
+              <LinearProgress
+                variant="determinate"
+                sx={{ my: 6 }}
+                value={progress}
               />
-            )}
-            {stageNumber === 3 && <FinalValuesList values={scoredValues} />}
-          </Stack>
-          <LinearProgress
-            variant="determinate"
-            sx={{ my: 6 }}
-            value={progress}
-          />
-        </Box>
+            </Box>
+          </Fade>
+        )}
       </Grid>
     </Grid>
   );

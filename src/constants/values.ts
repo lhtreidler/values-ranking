@@ -293,3 +293,5 @@ export const initialValues = values.reduce(
     score: number;
   })[]
 );
+
+export const localStorageKey = "valuesAppState";

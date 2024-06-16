@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -24,17 +25,15 @@ export const ValuesCard = ({
     event: SyntheticEvent<Element, Event>,
     value: number | null
   ) => {
-    if (value && value > 0) {
-      onNext(value);
-    }
+    if (value && value > 0) setRating(value);
+  };
+
+  const onSubmit = () => {
+    if (rating) onNext(rating);
   };
 
   useEffect(() => {
     setRating(score);
-  }, [name]);
-
-  useEffect(() => {
-    onNext(Math.floor(Math.random() * 5));
   }, [name]);
 
   return (
@@ -49,6 +48,7 @@ export const ValuesCard = ({
         First, rate each value based on how important it is to you
       </Typography>
       <Card
+        variant="outlined"
         sx={{
           width: 400,
           maxWidth: "100%",
@@ -58,19 +58,24 @@ export const ValuesCard = ({
       >
         <CardContent>
           <Stack
-            spacing={2}
+            spacing={0}
             display="flex"
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
           >
-            <Typography variant="h4" mb={2}>
-              {name}
-            </Typography>
-            <Typography textAlign="center" variant="body1">
-              {description}
-            </Typography>
+            <Box height={130}>
+              <Typography textAlign="center" variant="h4" mb={2}>
+                {name}
+              </Typography>
+              <Typography textAlign="center" variant="body1">
+                {description}
+              </Typography>
+            </Box>
             <Rating size="large" value={rating} onChange={handleChange} />
+            <Button sx={{ mt: 3 }} variant="outlined" onClick={onSubmit}>
+              Next
+            </Button>
           </Stack>
         </CardContent>
       </Card>
