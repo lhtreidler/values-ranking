@@ -20,6 +20,7 @@ export const ValuesCard = ({
   onNext: (val: number) => void;
 }) => {
   const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(-1);
 
   const handleChange = (
     event: SyntheticEvent<Element, Event>,
@@ -35,8 +36,16 @@ export const ValuesCard = ({
   useEffect(() => {
     setRating(score);
 
-    // onNext(Math.ceil(Math.random() * 4));
+    // onNext(Math.ceil(Math.random() * 7));
   }, [name]);
+
+  const ratingText: Record<number, string> = {
+    1: "Not at all important",
+    2: "Somewhat important",
+    3: "Important",
+    4: "Very important",
+    5: "Most important",
+  };
 
   return (
     <Stack
@@ -74,7 +83,23 @@ export const ValuesCard = ({
                 {description}
               </Typography>
             </Box>
-            <Rating size="large" value={rating} onChange={handleChange} />
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              maxWidth="100%"
+            >
+              <Rating
+                size="large"
+                value={rating}
+                onChange={handleChange}
+                max={5}
+                onChangeActive={(_e, val) => setHover(val)}
+              />
+              <Typography minHeight={20} pt={1} variant="body2">
+                {ratingText[hover > -1 ? hover : rating] || ""}
+              </Typography>
+            </Box>
             <Button sx={{ mt: 3 }} variant="outlined" onClick={onSubmit}>
               Next
             </Button>

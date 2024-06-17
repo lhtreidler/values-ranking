@@ -78,7 +78,7 @@ const App = () => {
       setCurrentIndex((prev) => prev + 1);
     } else {
       setStageNumber(2);
-      updateState();
+      updateState(true);
     }
   };
 
@@ -86,8 +86,10 @@ const App = () => {
     setCurrentIndex((prev) => prev - 1);
   };
 
-  const updateState = () => {
-    const newScoredValues = cutLosers(scoredValues);
+  const updateState = (firstCut?: boolean) => {
+    const newScoredValues = firstCut
+      ? scoredValues.filter(({ score }) => score > 1)
+      : cutLosers(scoredValues);
     setScoredValues(newScoredValues);
 
     if (newScoredValues.length <= 10) {
