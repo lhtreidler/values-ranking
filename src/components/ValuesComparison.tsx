@@ -35,7 +35,7 @@ export const ValuesComparison = ({
   useEffect(() => {
     setReverseVal(Math.random() > 0.5 ? "-reverse" : "");
     setFadeIn(true);
-    onSubmit(Math.random() > 0.5 ? 1 : 0);
+    // onSubmit(Math.random() > 0.5 ? 1 : 0);
   }, [values]);
 
   const getStyles = (index: number) => {

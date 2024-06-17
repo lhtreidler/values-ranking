@@ -18,7 +18,7 @@ export const FinalValuesList = ({
   values: ValueScores;
   onRestart: () => void;
 }) => {
-  console.log(values);
+  const maxScore = Math.max(...values.map(({ score }) => score));
 
   return (
     <Stack spacing={3}>
@@ -57,29 +57,25 @@ export const FinalValuesList = ({
           </Card>
         ))}
       </Box>
-      <Box px={6}>
-        <BarChart
-          series={[{ data: values.map(({ score }) => score) }]}
-          width={600}
-          height={400}
-          margin={{ left: 100 }}
-          yAxis={[{ data: values.map(({ name }) => name), scaleType: "band" }]}
-          layout="horizontal"
-        />
-        <PieChart
-          series={[
-            {
-              data: values.map(({ name, score }, i) => ({
-                id: i,
-                value: score,
-                label: name,
-              })),
-            },
-          ]}
-          width={700}
-          height={200}
-        />
-      </Box>
+      <Card sx={{ px: { xs: 0, sm: 2, md: 4 }, py: 2 }} variant="outlined">
+        <CardContent>
+          <Typography textAlign="center" variant="h5">
+            How your values compare:
+          </Typography>
+          <BarChart
+            series={[
+              { data: values.map(({ score }) => (score / maxScore) * 10) },
+            ]}
+            height={400}
+            margin={{ left: 100 }}
+            yAxis={[
+              { data: values.map(({ name }) => name), scaleType: "band" },
+            ]}
+            xAxis={[{ label: "Rating out of 10" }]}
+            layout="horizontal"
+          />
+        </CardContent>
+      </Card>
       <Box display="flex" flexDirection="column" alignItems="center">
         <Typography my={2} variant="body1">
           Doesn't feel accurate?

@@ -188,7 +188,7 @@ const App = () => {
       mt={1}
       minHeight="100vh"
     >
-      <Grid item xs={11} sm={10} md={9} lg={4}>
+      <Grid item xs={11} sm={10} md={9} lg={7}>
         {isLoading ? (
           <CircularProgress />
         ) : (
@@ -220,8 +220,22 @@ const App = () => {
                         Back
                       </Button>
                     )}
+                    {stageNumber === 3 && (
+                      <Button variant="outlined" sx={{ height: 35, zIndex: 2 }}>
+                        <PDFDownloadLink
+                          style={{ textDecoration: "none", color: "#1976d2" }}
+                          document={<ValuesPdf values={scoredValues} />}
+                          fileName="top_values.pdf"
+                        >
+                          {({ loading }) =>
+                            loading ? "Loading document..." : "Download as PDF"
+                          }
+                        </PDFDownloadLink>
+                      </Button>
+                    )}
                   </div>
-                  {currentIndex !== 0 && stageNumber < 3 && (
+
+                  {currentIndex !== 0 && (
                     <Button
                       sx={{ height: 30, zIndex: 2 }}
                       variant="outlined"
@@ -229,19 +243,6 @@ const App = () => {
                       onClick={() => setRestartModalOpen(true)}
                     >
                       Start over
-                    </Button>
-                  )}
-                  {stageNumber === 3 && (
-                    <Button variant="outlined" sx={{ height: 35, zIndex: 2 }}>
-                      <PDFDownloadLink
-                        style={{ textDecoration: "none", color: "#1976d2" }}
-                        document={<ValuesPdf values={scoredValues} />}
-                        fileName="top_values.pdf"
-                      >
-                        {({ loading }) =>
-                          loading ? "Loading document..." : "Download as PDF"
-                        }
-                      </PDFDownloadLink>
                     </Button>
                   )}
                 </Box>
