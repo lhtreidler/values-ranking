@@ -16,7 +16,7 @@ export const cutLosers = (scoredValues: ValueScores) => {
   while (!found) {
     const midScore = currentVals[cutIndex]?.score;
     const nextScore = currentVals[cutIndex + 1]?.score;
-    console.log({ midScore, nextScore });
+
     if (!nextScore) {
       found = true;
     } else {
@@ -29,16 +29,8 @@ export const cutLosers = (scoredValues: ValueScores) => {
     }
   }
 
-  console.log(
-    "next",
-    currentVals.slice(0, cutIndex),
-    currentVals.slice(0, cutIndex).length
-  );
-
   if (currentVals.slice(0, cutIndex).length % 2 !== 0)
     throw new Error(`Length is ${currentVals.slice(0, cutIndex).length}`);
-
-  console.log("Length is: ", currentVals.slice(0, cutIndex).length);
 
   return currentVals.slice(0, cutIndex);
 };
@@ -49,11 +41,9 @@ const calculateRating = (userA: number, userB: number) =>
   1 / (1 + Math.pow(10, (userB - userA) / 400));
 
 export const getEloScores = (winnerRating: number, loserRating: number) => {
-  console.log({ winner: winnerRating, loser: loserRating });
   const winnerExpected = calculateRating(winnerRating, loserRating);
   const loserExpected = calculateRating(loserRating, winnerRating);
 
-  console.log({ winnerRating, loserRating });
   return {
     newWinnerRating: winnerRating + kVal * (1 - winnerExpected),
     newLoserRating: loserRating + kVal * (0 - loserExpected),

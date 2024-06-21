@@ -48,7 +48,6 @@ const App = () => {
     if (stageNumber === 2) {
       const step = 50 / 100;
       setProgress((prev) => Math.min(prev + step, 96));
-      console.log("progress:", progress);
     }
     if (stageNumber === 3) setProgress(100);
   }, [currentIndex, indexesToCompare, stageNumber]);
@@ -97,7 +96,6 @@ const App = () => {
 
     if (newScoredValues.length <= 10) {
       setStageNumber(3);
-      console.log(newScoredValues);
       return;
     }
 

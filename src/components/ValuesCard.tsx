@@ -35,6 +35,8 @@ export const ValuesCard = ({
   useEffect(() => {
     setRating(score);
     setHover(-1);
+
+    // onNext(Math.ceil(Math.random() * 5));
   }, [name]);
 
   return (
