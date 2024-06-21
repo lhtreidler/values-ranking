@@ -23,10 +23,12 @@ import {
   Grid,
   LinearProgress,
   Stack,
+  Typography,
 } from "@mui/material";
 import { RestartModal } from "./components/RestartModal";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { ValuesPdf } from "./components/ValuesPdf";
+import { IntroModal } from "./components/IntroModal";
 
 const App = () => {
   const [scoredValues, setScoredValues] = useState<ValueScores>(initialValues);
@@ -38,6 +40,7 @@ const App = () => {
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [restartModalOpen, setRestartModalOpen] = useState(false);
+  const [isIntroModalOpen, setIsIntroModalOpen] = useState(false);
 
   useEffect(() => {
     if (stageNumber === 1)
@@ -129,7 +132,7 @@ const App = () => {
   };
 
   const onRestart = () => {
-    setScoredValues(initialValues);
+    setScoredValues(initialValues.map((val) => ({ ...val, score: 0 })));
     setIndexesToCompare(null);
     setCurrentIndex(0);
     setStageNumber(1);
@@ -171,6 +174,11 @@ const App = () => {
       setStageNumber(storedValues.stageNumber);
       setProgress(storedValues.progress);
     }
+
+    if (!storedValues || storedValues.currentIndex === 0) {
+      setIsIntroModalOpen(true);
+    }
+
     setIsLoading(false);
   }, []);
 
@@ -191,6 +199,10 @@ const App = () => {
       minHeight="100vh"
     >
       <Grid item xs={11} sm={10} md={9} lg={7}>
+        <IntroModal
+          open={isIntroModalOpen}
+          onClose={() => setIsIntroModalOpen(false)}
+        />
         {isLoading ? (
           <CircularProgress />
         ) : (

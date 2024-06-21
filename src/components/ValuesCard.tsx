@@ -3,12 +3,11 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
   Rating,
   Stack,
   Typography,
 } from "@mui/material";
-import { Value, ValueScore, values } from "../constants";
+import { ValueScore, ratingText, values } from "../constants";
 import { SyntheticEvent, useEffect, useState } from "react";
 
 export const ValuesCard = ({
@@ -35,17 +34,8 @@ export const ValuesCard = ({
 
   useEffect(() => {
     setRating(score);
-
-    // onNext(Math.ceil(Math.random() * 7));
+    setHover(-1);
   }, [name]);
-
-  const ratingText: Record<number, string> = {
-    1: "Not at all important",
-    2: "Somewhat important",
-    3: "Important",
-    4: "Very important",
-    5: "Most important",
-  };
 
   return (
     <Stack

@@ -152,7 +152,7 @@ export const values1 = [
     description: "To share my innermost experience with others",
   },
   {
-    name: "JUSTCE",
+    name: "JUSTICE",
     description: "To promote equal and fair treatment for all",
   },
   {
